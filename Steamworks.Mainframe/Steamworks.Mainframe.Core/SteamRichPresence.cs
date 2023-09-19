@@ -87,7 +87,7 @@ namespace Steamworks.Mainframe.Core
 		public static void Set(string key, string value)
 		{
 			if (Steam.Valid && !SteamFriends.SetRichPresence(key, value))
-				SteamManager.Logger.LogError($"Could not set rich presence. {key}: {value}");
+				SteamConfig.Logger.LogError($"Could not set rich presence. {key}: {value}");
 		}
 
 		public static void Clear()
