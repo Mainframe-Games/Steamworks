@@ -11,7 +11,7 @@ namespace Steamworks.Mainframe.Core
 		/// <summary>
 		/// Returns if SteamManager is initialised
 		/// </summary>
-		public static bool Valid => SteamManager.Initialized;
+		public static bool Valid => SteamConfig.Initialized;
 		
 		public static ulong AppId => 0;
 		
@@ -40,7 +40,7 @@ namespace Steamworks.Mainframe.Core
 			if (ret == -1)
 				throw new Exception("GetLaunchCommandLine failed");
 
-			SteamManager.Logger.Log($"GetLaunchCommandLine: '{cmdLine}'");
+			SteamConfig.Logger.Log($"GetLaunchCommandLine: '{cmdLine}'");
 
 			return cmdLine?.Trim() ?? string.Empty;
 		}

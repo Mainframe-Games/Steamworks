@@ -13,28 +13,14 @@ namespace Steamworks.Mainframe.Core
 	// The SteamManager provides a base implementation of Steamworks.NET on which you can build upon.
 	// It handles the basics of starting up and shutting down the SteamAPI for use.
 	//
-	public class SteamManager
+	public static class SteamConfig
 	{
 		public static bool s_EverInitialized;
-
-		protected static SteamManager s_instance;
-		protected static SteamManager Instance { get; }
-
-		protected bool m_bInitialized;
-		public static bool Initialized => Instance.m_bInitialized;
-
+		public static bool Initialized { get; private set; }
 		public static ILogger Logger { get; set; } = new ConsoleLogger();
 
-		public static event Action OnApplicationQuit;
-
-		public bool Init()
+		public static bool Init()
 		{
-			// Only one instance of SteamManager at a time!
-			if (s_instance != null)
-				return false;
-
-			s_instance = this;
-
 			if (s_EverInitialized)
 			{
 				// This is almost always an error.
@@ -84,8 +70,8 @@ namespace Steamworks.Mainframe.Core
 			// [*] Your App ID is not completely set up, i.e. in Release State: Unavailable, or it's missing default packages.
 			// Valve's documentation for this is located here:
 			// https://partner.steamgames.com/doc/sdk/api#initialization_and_shutdown
-			m_bInitialized = SteamAPI.Init();
-			if (!m_bInitialized)
+			Initialized = SteamAPI.Init();
+			if (!Initialized)
 			{
 				Logger.LogError(
 					"[Steamworks.NET] SteamAPI_Init() failed. Refer to Valve's documentation or the comment above this line for more information.");
@@ -99,23 +85,16 @@ namespace Steamworks.Mainframe.Core
 		// OnApplicationQuit gets called too early to shutdown the SteamAPI.
 		// Because the SteamManager should be persistent and never disabled or destroyed we can shutdown the SteamAPI here.
 		// Thus it is not recommended to perform any Steamworks work in other OnDestroy functions as the order of execution can not be garenteed upon Shutdown. Prefer OnDisable().
-		public void Shutdown()
+		public static void Shutdown()
 		{
-			if (s_instance != this)
-				return;
-
-			s_instance = null;
-
-			if (!m_bInitialized)
-				return;
-
-			SteamAPI.Shutdown();
+			if (Initialized)
+				SteamAPI.Shutdown();
 		}
 
-		public void Update()
+		public static void Update()
 		{
 			// Run Steam client callbacks
-			if (!m_bInitialized)
+			if (Initialized)
 				SteamAPI.RunCallbacks();
 		}
 	}
