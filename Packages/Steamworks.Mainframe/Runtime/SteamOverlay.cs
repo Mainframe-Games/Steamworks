@@ -1,4 +1,4 @@
-﻿namespace Steamworks.Mainframe.Core
+﻿namespace Steamworks.Mainframe
 {
 	public static class SteamOverlay
 	{

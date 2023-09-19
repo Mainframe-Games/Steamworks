@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Scripting;
 
-namespace Steamworks.Mainframe.Core
+namespace Steamworks.Mainframe
 {
 	public static class SteamRichPresence
 	{

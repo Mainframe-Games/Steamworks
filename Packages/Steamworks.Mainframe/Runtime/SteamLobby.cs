@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Steamworks.Mainframe.Core;
 using UnityEngine;
 using UnityEngine.Scripting;
 
@@ -28,7 +27,7 @@ namespace Steamworks.Mainframe
 		[Preserve] private static Callback<LobbyMatchList_t> _lobbyListRequest;
 		[Preserve] private static Callback<LobbyDataUpdate_t> _lobbyDataUpdated;
 
-		public static void Init()
+		private static void Init()
 		{
 			// create
 			_lobbyCreated = Callback<LobbyCreated_t>.Create(OnLobbyCreatedCallback);
@@ -44,30 +43,34 @@ namespace Steamworks.Mainframe
 
 		#region Create
 
-		public static async Task<SteamLobbyInfo> CreateLobbyAsync(int maxConnections, bool friendsOnly = false)
+		public static async Task<SteamLobbyInfo> CreateLobbyAsync(
+			string lobbyName,
+			int maxPlayers,
+			string appVersion = null,
+			bool friendsOnly = false)
 		{
 			if (!Steam.Valid)
 				throw new Exception("Steam not initialised");
 
+			Init();
+			
 			var lobbyType = friendsOnly
 				? ELobbyType.k_ELobbyTypeFriendsOnly
 				: ELobbyType.k_ELobbyTypePublic;
 
 			_createLobbyTask = new TaskCompletionSource<ulong>();
-			SteamMatchmaking.CreateLobby(lobbyType, maxConnections);
+			SteamMatchmaking.CreateLobby(lobbyType, maxPlayers);
 			var lobbyId = await _createLobbyTask.Task;
 			
 			Current = new SteamLobbyInfo(lobbyId)
 			{
-				HostId = Steam.SteamId,
-				LobbyName = $"{Steam.Username}'s Game",
-				AppVersion = Application.version,
-				IsActive = true,
-				MaxConnections = maxConnections,
+				LobbyName = lobbyName,
+				AppVersion = appVersion ?? Application.version,
+				IsAdvertising = true
 			};
 
-			UpdateLobbyPlayerCount(1);
 			SteamRichPresence.SetConnect(Steam.SteamId.ToString());
+			SteamRichPresence.SetGroup(Current.PlayerCount);
 
 			return Current;
 		}
@@ -93,6 +96,8 @@ namespace Steamworks.Mainframe
 			if (!Steam.Valid)
 				throw new Exception("Steam not initialised");
 
+			Init();
+			
 			_joinLobbyTask = new TaskCompletionSource<ulong>();
 			SteamMatchmaking.JoinLobby((CSteamID)lobbyId);
 			Current = new SteamLobbyInfo(lobbyId);
@@ -104,12 +109,12 @@ namespace Steamworks.Mainframe
 		{
 			Debug.Log($"Lobby request from {callback.m_steamIDFriend}");
 			SteamMatchmaking.JoinLobby((CSteamID)Current.LobbyId);
+			_joinLobbyTask.SetResult(0);
 		}
 
 		private static void OnLobbyEntered(LobbyEnter_t callback)
 		{
 			Debug.Log($"Lobby Entered: {callback.m_ulSteamIDLobby}");
-			_joinLobbyTask.SetResult(0);
 		}
 
 		#endregion
@@ -118,8 +123,11 @@ namespace Steamworks.Mainframe
 
 		public static void LeaveLobby()
 		{
-			if (Steam.Valid)
-				SteamMatchmaking.LeaveLobby((CSteamID)Current.LobbyId);
+			if (!Steam.Valid)
+				return;
+				
+			SteamMatchmaking.LeaveLobby((CSteamID)Current.LobbyId);
+			Current = null;
 		}
 
 		#endregion
@@ -146,7 +154,7 @@ namespace Steamworks.Mainframe
 
 			return lobbyIds
 				.Select(x => new SteamLobbyInfo(x))
-				.Where(info => info.IsActive && info.AppVersion == Application.version)
+				.Where(info => info.IsAdvertising && info.AppVersion == Application.version)
 				.ToList();
 		}
 
@@ -193,12 +201,6 @@ namespace Steamworks.Mainframe
 		{
 			var info = new SteamLobbyInfo(param.m_ulSteamIDLobby);
 			OnLobbyUpdated?.Invoke(info);
-		}
-
-		private static void UpdateLobbyPlayerCount(int playerCount)
-		{
-			Current.PlayerCount = playerCount;
-			SteamRichPresence.SetGroup(playerCount);
 		}
 
 		#endregion

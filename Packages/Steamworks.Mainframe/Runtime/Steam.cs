@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Steamworks.Mainframe.Core
+namespace Steamworks.Mainframe
 {
 	/// <summary>
 	/// Quick property and methods to access some steam API
@@ -31,7 +31,7 @@ namespace Steamworks.Mainframe.Core
 		/// </summary>
 		public static string Branch => SteamApps.GetCurrentBetaName(out var branchName, 32) ? branchName : string.Empty;
 		
-		public static string GetLaunchCommandLine()
+		public static string GetLaunchCommandLine(string flag)
 		{
 			if (!Valid)
 				return string.Empty;
@@ -41,9 +41,17 @@ namespace Steamworks.Mainframe.Core
 			if (ret == -1)
 				throw new Exception("GetLaunchCommandLine failed");
 
-			Debug.Log($"GetLaunchCommandLine: '{cmdLine}'");
+			// Debug.Log($"GetLaunchCommandLine: '{cmdLine}'");
 
-			return cmdLine?.Trim() ?? string.Empty;
+			var split = cmdLine.Split(' ');
+
+			for (int i = 0; i < split.Length; i++)
+			{
+				if (split[i] == flag)
+					return split[i + 1];
+			}
+
+			return null;
 		}
 		
 		public static IEnumerable<SteamFriend> GetFriends()

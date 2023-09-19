@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Steamworks.Mainframe.Core
+namespace Steamworks.Mainframe
 {
 	public static class SteamRemotePlay
 	{

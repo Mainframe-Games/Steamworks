@@ -1,6 +1,7 @@
 ﻿using System;
+using UnityEngine;
 
-namespace Steamworks.Mainframe.Core
+namespace Steamworks.Mainframe
 {
 	public struct SteamFriend : IEquatable<SteamFriend>, IComparable<SteamFriend>
 	{
@@ -38,6 +39,11 @@ namespace Steamworks.Mainframe.Core
 		public int CompareTo(SteamFriend other)
 		{
 			return SteamId.CompareTo(other.SteamId);
+		}
+
+		public Sprite GetAvatarSprite()
+		{
+			return SteamAvatar.GetAvatar(SteamId);
 		}
 	}
 }

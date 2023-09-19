@@ -1,13 +1,13 @@
 {
   "name": "games.mainframe.steamworks",
-  "displayName": "Steamworks.Mainframe",
+  "displayName": "Steamworks Mainframe",
   "description": "Wrapper for Steamworks.NET. Inspired by Facepunch",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "unity": "2019.4",
   "author": {
-    "name": "Brogan King",
+    "name": "Mainframe Games",
     "email": "brogan@mainframe.games",
-    "url": "https://github.com/brogan89"
+    "url": "https://mainframe.games"
   },
   "license": "MIT",
   "keywords": [
@@ -16,7 +16,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rlabrecque/Steamworks.NET.git?path=/com.rlabrecque.steamworks.net"
+    "url": "git+https://github.com/Mainframe-Games/Steamworks.git?path=/Packages/Steamworks.Mainframe"
   },
   "dependencies": {
     "com.rlabrecque.steamworks.net": "https://github.com/rlabrecque/Steamworks.NET.git?path=/com.rlabrecque.steamworks.net#20.2.0",

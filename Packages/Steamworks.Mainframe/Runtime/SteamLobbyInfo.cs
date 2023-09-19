@@ -1,47 +1,33 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
-namespace Steamworks.Mainframe.Core
+namespace Steamworks.Mainframe
 {
 	public class SteamLobbyInfo
 	{
 		public ulong LobbyId { get; }
-
-		public ulong HostId
-		{
-			get => ParseUlong(nameof(HostId));
-			set => SetData(nameof(HostId), value.ToString());
-		}
-
+		public bool IsHost => HostId == Steam.SteamId;
+		public ulong HostId => SteamMatchmaking.GetLobbyOwner((CSteamID)LobbyId).m_SteamID;
+		public int PlayerCount => SteamMatchmaking.GetNumLobbyMembers((CSteamID)LobbyId);
+		public int MaxPlayers => SteamMatchmaking.GetLobbyMemberLimit((CSteamID)LobbyId);
+		
 		public string LobbyName
 		{
 			get => GetData(nameof(LobbyName));
 			set => SetData(nameof(LobbyName), value);
 		}
-
-		public int PlayerCount
-		{
-			get => ParseInt(nameof(PlayerCount));
-			set => SetData(nameof(PlayerCount), value.ToString());
-		}
-
+		
 		public string AppVersion
 		{
 			get => GetData(nameof(AppVersion));
 			set => SetData(nameof(AppVersion), value);
 		}
 
-		public bool IsActive
+		public bool IsAdvertising
 		{
-			get => GetData(nameof(IsActive)) == true.ToString();
-			set => SetData(nameof(IsActive), value.ToString());
-		}
-
-		public int MaxConnections 
-		{
-			get => ParseInt(nameof(MaxConnections));
-			set => SetData(nameof(MaxConnections), value.ToString());
+			get => GetData(nameof(IsAdvertising)) == true.ToString();
+			set => SetData(nameof(IsAdvertising), value.ToString());
 		}
 
 		public SteamLobbyInfo(ulong lobbyId)
@@ -49,31 +35,22 @@ namespace Steamworks.Mainframe.Core
 			LobbyId = lobbyId;
 		}
 
-		private int ParseInt(string key)
-		{
-			var rawVal = GetData(key);
-
-			if (int.TryParse(rawVal, out var id))
-				return id;
-
-			Debug.LogError($"Could not parse '{rawVal}' to {nameof(UInt32)}. Key: {key}");
-			return 0;
-		}
-		
-		private ulong ParseUlong(string key)
-		{
-			var rawVal = GetData(key);
-
-			if (ulong.TryParse(rawVal, out var id))
-				return id;
-
-			Debug.LogError($"Could not parse '{rawVal}' to {nameof(UInt64)}. Key: {key}");
-			return 0;
-		}
-
 		public override string ToString()
 		{
 			return JObject.FromObject(this).ToString();
+		}
+
+		public IEnumerable<SteamFriend> GetPlayers()
+		{
+			var id = (CSteamID)LobbyId;
+			var count = SteamMatchmaking.GetNumLobbyMembers(id);
+			for (int i = 0; i < count; i++)
+			{
+				var memberId = SteamMatchmaking.GetLobbyMemberByIndex(id, i);
+				var username = SteamFriends.GetFriendPersonaName(memberId);
+				var player = new SteamFriend(memberId.m_SteamID, username);
+				yield return player;
+			}
 		}
 
 		private string GetData(string key)
