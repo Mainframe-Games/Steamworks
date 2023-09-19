@@ -1,0 +1,42 @@
+{
+  "runtimeTarget": {
+    "name": ".NETStandard,Version=v2.1/",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETStandard,Version=v2.1": {},
+    ".NETStandard,Version=v2.1/": {
+      "Steamworks.Mainframe.Core/1.0.0": {
+        "dependencies": {
+          "Steamworks.NET": "20.1.0"
+        },
+        "runtime": {
+          "Steamworks.Mainframe.Core.dll": {}
+        }
+      },
+      "Steamworks.NET/20.1.0": {
+        "runtime": {
+          "lib/netstandard2.1/Steamworks.NET.dll": {
+            "assemblyVersion": "20.1.0.0",
+            "fileVersion": "20.1.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Steamworks.Mainframe.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Steamworks.NET/20.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+GntwnyJ5tCNvUIaQxv2+ehDvZJzGUqlSB5xRBk1hTj1qqBJ6s4vK/OfGD/jae7aTmXiGSm8wpJORosNtQevJQ==",
+      "path": "steamworks.net/20.1.0",
+      "hashPath": "steamworks.net.20.1.0.nupkg.sha512"
+    }
+  }
+}

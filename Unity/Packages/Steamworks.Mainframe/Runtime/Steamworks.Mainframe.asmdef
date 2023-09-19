@@ -1,0 +1,22 @@
+{
+    "name": "Steamworks.Mainframe",
+    "rootNamespace": "Steamworks.Mainframe",
+    "references": [],
+    "includePlatforms": [
+        "Editor",
+        "EmbeddedLinux",
+        "LinuxStandalone64",
+        "CloudRendering",
+        "macOSStandalone",
+        "WindowsStandalone32",
+        "WindowsStandalone64"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

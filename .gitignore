@@ -1,9 +1,10 @@
-Library
-Logs
 .idea
 .vs
-obj
-UserSettings
-*.csproj
-*.sln
-Temp
+
+Unity/Library
+Unity/Logs
+Unity/obj
+Unity/UserSettings
+Unity/*.csproj
+Unity/*.sln
+Unity/Temp
