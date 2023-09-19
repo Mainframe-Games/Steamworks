@@ -12,8 +12,7 @@ namespace Steamworks.Mainframe
 		public static event Action<string> OnJoinRequested;
 		[Preserve] private static Callback<GameRichPresenceJoinRequested_t> _gameRichPresenceJoinRequested;
 
-		[RuntimeInitializeOnLoadMethod]
-		private static void Init()
+		static SteamRichPresence()
 		{
 			_gameRichPresenceJoinRequested = Callback<GameRichPresenceJoinRequested_t>.Create(OnGameRichPresenceJoinRequested_t);
 		}

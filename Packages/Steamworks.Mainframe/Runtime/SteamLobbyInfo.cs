@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace Steamworks.Mainframe
 {
-	public class SteamLobbyInfo
+	public class SteamLobbyInfo : IEquatable<SteamLobbyInfo>, IComparable<SteamLobbyInfo>
 	{
 		public ulong LobbyId { get; }
 		public bool IsHost => HostId == Steam.SteamId;
@@ -28,6 +29,12 @@ namespace Steamworks.Mainframe
 		{
 			get => GetData(nameof(IsAdvertising)) == true.ToString();
 			set => SetData(nameof(IsAdvertising), value.ToString());
+		}
+
+		public string Country
+		{
+			get => GetData(nameof(Country));
+			set => SetData(nameof(Country), value);
 		}
 
 		public SteamLobbyInfo(ulong lobbyId)
@@ -62,6 +69,45 @@ namespace Steamworks.Mainframe
 		{
 			if (!SteamMatchmaking.SetLobbyData((CSteamID)LobbyId, key, value))
 				Debug.LogError($"Failed to set lobby data. {key}: {value}");
+		}
+
+		public bool Equals(SteamLobbyInfo other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+			return LobbyId == other.LobbyId;
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			if (obj.GetType() != GetType()) return false;
+			return Equals((SteamLobbyInfo)obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return LobbyId.GetHashCode();
+		}
+
+		public int CompareTo(SteamLobbyInfo other)
+		{
+			if (ReferenceEquals(this, other)) return 0;
+			if (ReferenceEquals(null, other)) return 1;
+			return LobbyId.CompareTo(other.LobbyId);
+		}
+
+		public static bool operator ==(SteamLobbyInfo x, SteamLobbyInfo y)
+		{
+			if (x is null && y is null)
+				return true;
+			
+			return x?.Equals(y) ?? false;
+		}
+		public static bool operator !=(SteamLobbyInfo x, SteamLobbyInfo y) 
+		{
+			return !(x == y);
 		}
 	}
 }

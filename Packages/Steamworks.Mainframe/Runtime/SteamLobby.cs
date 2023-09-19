@@ -27,7 +27,7 @@ namespace Steamworks.Mainframe
 		[Preserve] private static Callback<LobbyMatchList_t> _lobbyListRequest;
 		[Preserve] private static Callback<LobbyDataUpdate_t> _lobbyDataUpdated;
 
-		private static void Init()
+		static SteamLobby()
 		{
 			// create
 			_lobbyCreated = Callback<LobbyCreated_t>.Create(OnLobbyCreatedCallback);
@@ -37,7 +37,7 @@ namespace Steamworks.Mainframe
 			_lobbyEntered = Callback<LobbyEnter_t>.Create(OnLobbyEntered);
 
 			// get
-			_lobbyListRequest = Callback<LobbyMatchList_t>.Create(OnLobbyMatchList);
+			_lobbyListRequest = Callback<LobbyMatchList_t>.Create(OnLobbyListCallback);
 			_lobbyDataUpdated = Callback<LobbyDataUpdate_t>.Create(OnLobbyDataUpdated);
 		}
 
@@ -52,8 +52,6 @@ namespace Steamworks.Mainframe
 			if (!Steam.Valid)
 				throw new Exception("Steam not initialised");
 
-			Init();
-			
 			var lobbyType = friendsOnly
 				? ELobbyType.k_ELobbyTypeFriendsOnly
 				: ELobbyType.k_ELobbyTypePublic;
@@ -66,7 +64,8 @@ namespace Steamworks.Mainframe
 			{
 				LobbyName = lobbyName,
 				AppVersion = appVersion ?? Application.version,
-				IsAdvertising = true
+				IsAdvertising = true,
+				Country = SteamUtils.GetIPCountry()
 			};
 
 			SteamRichPresence.SetConnect(Steam.SteamId.ToString());
@@ -96,8 +95,6 @@ namespace Steamworks.Mainframe
 			if (!Steam.Valid)
 				throw new Exception("Steam not initialised");
 
-			Init();
-			
 			_joinLobbyTask = new TaskCompletionSource<ulong>();
 			SteamMatchmaking.JoinLobby((CSteamID)lobbyId);
 			Current = new SteamLobbyInfo(lobbyId);
@@ -109,12 +106,12 @@ namespace Steamworks.Mainframe
 		{
 			Debug.Log($"Lobby request from {callback.m_steamIDFriend}");
 			SteamMatchmaking.JoinLobby((CSteamID)Current.LobbyId);
-			_joinLobbyTask.SetResult(0);
 		}
 
 		private static void OnLobbyEntered(LobbyEnter_t callback)
 		{
 			Debug.Log($"Lobby Entered: {callback.m_ulSteamIDLobby}");
+			_joinLobbyTask?.SetResult(0);
 		}
 
 		#endregion
@@ -152,10 +149,7 @@ namespace Steamworks.Mainframe
 				lobbyIds = await _lobbyIdsTask.Task;
 			}
 
-			return lobbyIds
-				.Select(x => new SteamLobbyInfo(x))
-				.Where(info => info.IsAdvertising && info.AppVersion == Application.version)
-				.ToList();
+			return lobbyIds.Select(x => new SteamLobbyInfo(x)).ToList();
 		}
 
 		/// <summary>
@@ -177,7 +171,7 @@ namespace Steamworks.Mainframe
 			}
 		}
 
-		private static void OnLobbyMatchList(LobbyMatchList_t callback)
+		private static void OnLobbyListCallback(LobbyMatchList_t callback)
 		{
 			if (_lobbyIdsTask == null)
 				throw new NullReferenceException($"{nameof(_lobbyIdsTask)} is null");

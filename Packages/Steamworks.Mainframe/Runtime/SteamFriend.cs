@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace Steamworks.Mainframe
 {
-	public struct SteamFriend : IEquatable<SteamFriend>, IComparable<SteamFriend>
+	public readonly struct SteamFriend : IEquatable<SteamFriend>, IComparable<SteamFriend>
 	{
-		public ulong SteamId;
-		public string Username;
+		public readonly ulong SteamId;
+		public readonly string Username;
 		
 		public bool IsMe => SteamId == Steam.SteamId;
 
@@ -43,7 +43,10 @@ namespace Steamworks.Mainframe
 
 		public Sprite GetAvatarSprite()
 		{
-			return SteamAvatar.GetAvatar(SteamId);
+			var sprite = SteamAvatar.GetAvatar(SteamId);
+			if (!sprite)
+				Debug.Log($"Failed to get avatar for: {ToString()}");
+			return sprite;
 		}
 	}
 }

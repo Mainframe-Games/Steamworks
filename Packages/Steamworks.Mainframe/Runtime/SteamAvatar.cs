@@ -14,10 +14,11 @@ namespace Steamworks.Mainframe
 			if (id != -1)
 			{
 				var texture2D = GetSteamImageAsTexture2D(id);
-				return Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
+				if (texture2D)
+					return Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
 			}
 
-			Debug.LogError("Failed to load avatar.");
+			Debug.LogError($"Failed to load avatar for steamId: {steamId}");
 			return null;
 		}
 		
