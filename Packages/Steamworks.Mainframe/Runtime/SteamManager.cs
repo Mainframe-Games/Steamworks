@@ -9,11 +9,15 @@
 #define DISABLESTEAMWORKS
 #endif
 
+#if !DISABLESTEAMWORKS
+#endif
+
 using System;
 using System.Text;
 using AOT;
 using UnityEngine;
-#if !DISABLESTEAMWORKS
+#if UNITY_EDITOR
+using UnityEditor;
 #endif
 
 namespace Steamworks.Mainframe
@@ -28,6 +32,7 @@ namespace Steamworks.Mainframe
 #if !DISABLESTEAMWORKS
 		protected static bool s_EverInitialized;
 		protected static SteamManager s_instance;
+
 		protected static SteamManager Instance => s_instance == null
 			? s_instance = new GameObject(nameof(SteamManager)).AddComponent<SteamManager>()
 			: s_instance;
@@ -55,6 +60,10 @@ namespace Steamworks.Mainframe
 
 		protected virtual void Awake()
 		{
+#if UNITY_EDITOR
+			if (!EditorPrefs.GetBool("Steamworks.InitialiseInEditor"))
+				return;
+#endif
 			// Only one instance of SteamManager at a time!
 			if (s_instance)
 			{
@@ -182,9 +191,7 @@ namespace Steamworks.Mainframe
 		protected virtual void Update()
 		{
 			if (!m_bInitialized)
-			{
 				return;
-			}
 
 			// Run Steam client callbacks
 			SteamAPI.RunCallbacks();

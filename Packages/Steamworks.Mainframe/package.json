@@ -1,7 +1,7 @@
 {
 	"name": "games.mainframe.steamworks",
 	"displayName": "Steamworks.Mainframe",
-	"description": "wrapper for Steamworks.NET. Inspired by Facepunch",
+	"description": "Wrapper for Steamworks.NET. Inspired by Facepunch",
 	"version": "0.0.1",
 	"unity": "2019.4",
 	"author": {
