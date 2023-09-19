@@ -14,7 +14,7 @@ This package has a dependency on [Steamworks.NET](https://github.com/rlabrecque/
 Install this package:
 
 ```json
-"com.mainframe-games.build-system": "https://github.com/Mainframe-Games/UnityDeployment.git?path=Unity/BuildSystem" 
+"games.mainframe.steamworks": "https://github.com/Mainframe-Games/Steamworks.git?path=/Packages/Steamworks.Mainframe"
 ```
 
 If you plan to use SteamP2P with Unity Netcode: 
