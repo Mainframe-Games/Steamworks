@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.rlabrecque.steamworks.net": {
+      "version": "https://github.com/rlabrecque/Steamworks.NET.git?path=/com.rlabrecque.steamworks.net#20.2.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "a3fe8091f7237eef3f38becc3faa29b2dc6f9ce9"
+    },
     "com.unity.editorcoroutines": {
       "version": "1.0.0",
       "depth": 1,
@@ -136,7 +143,9 @@
       "version": "file:Steamworks.Mainframe",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {}
+      "dependencies": {
+        "com.rlabrecque.steamworks.net": "https://github.com/rlabrecque/Steamworks.NET.git?path=/com.rlabrecque.steamworks.net#20.2.0"
+      }
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

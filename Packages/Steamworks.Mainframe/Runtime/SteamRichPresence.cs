@@ -1,17 +1,19 @@
 ﻿using System;
+using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Steamworks.Mainframe.Core
 {
-	public class SteamRichPresence
+	public static class SteamRichPresence
 	{
 		/// <summary>
 		/// Gives connect string from rich presence
 		/// </summary>
 		public static event Action<string> OnJoinRequested;
-		
-		private static Callback<GameRichPresenceJoinRequested_t> _gameRichPresenceJoinRequested;
+		[Preserve] private static Callback<GameRichPresenceJoinRequested_t> _gameRichPresenceJoinRequested;
 
-		public static void Init()
+		[RuntimeInitializeOnLoadMethod]
+		private static void Init()
 		{
 			_gameRichPresenceJoinRequested = Callback<GameRichPresenceJoinRequested_t>.Create(OnGameRichPresenceJoinRequested_t);
 		}
@@ -87,7 +89,7 @@ namespace Steamworks.Mainframe.Core
 		public static void Set(string key, string value)
 		{
 			if (Steam.Valid && !SteamFriends.SetRichPresence(key, value))
-				SteamConfig.Logger.LogError($"Could not set rich presence. {key}: {value}");
+				Debug.LogError($"Could not set rich presence. {key}: {value}");
 		}
 
 		public static void Clear()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Steamworks.Mainframe.Core
 {
@@ -11,7 +12,7 @@ namespace Steamworks.Mainframe.Core
 		/// <summary>
 		/// Returns if SteamManager is initialised
 		/// </summary>
-		public static bool Valid => SteamConfig.Initialized;
+		public static bool Valid => SteamManager.Initialized;
 		
 		public static ulong AppId => 0;
 		
@@ -40,7 +41,7 @@ namespace Steamworks.Mainframe.Core
 			if (ret == -1)
 				throw new Exception("GetLaunchCommandLine failed");
 
-			SteamConfig.Logger.Log($"GetLaunchCommandLine: '{cmdLine}'");
+			Debug.Log($"GetLaunchCommandLine: '{cmdLine}'");
 
 			return cmdLine?.Trim() ?? string.Empty;
 		}

@@ -1,10 +1,11 @@
 .idea
 .vs
 
-Unity/Library
-Unity/Logs
-Unity/obj
-Unity/UserSettings
-Unity/*.csproj
-Unity/*.sln
-Unity/Temp
+*.csproj
+*.sln
+
+Library
+Logs
+obj
+UserSettings
+Temp

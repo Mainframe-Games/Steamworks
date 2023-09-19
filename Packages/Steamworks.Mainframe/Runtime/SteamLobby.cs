@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Steamworks.Mainframe.Core
 {
@@ -13,8 +15,9 @@ namespace Steamworks.Mainframe.Core
 		public static event Action<string> OnJoinRequested;
 		
 		private static TaskCompletionSource<HashSet<ulong>> _lobbyCodesTask;
-		private static Callback<GameLobbyJoinRequested_t> _gameLobbyJoinRequested;
+		[Preserve] private static Callback<GameLobbyJoinRequested_t> _gameLobbyJoinRequested;
 
+		[RuntimeInitializeOnLoadMethod]
 		public static void Init()
 		{
 			_gameLobbyJoinRequested = Callback<GameLobbyJoinRequested_t>.Create(OnGameLobbyJoinRequested_t);

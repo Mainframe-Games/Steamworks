@@ -17,5 +17,8 @@
 	"repository": {
 	  "type": "git",
 	  "url": "git+https://github.com/rlabrecque/Steamworks.NET.git?path=/com.rlabrecque.steamworks.net"
+	},
+	"dependencies": {
+		"com.rlabrecque.steamworks.net": "https://github.com/rlabrecque/Steamworks.NET.git?path=/com.rlabrecque.steamworks.net#20.2.0"
 	}
 }

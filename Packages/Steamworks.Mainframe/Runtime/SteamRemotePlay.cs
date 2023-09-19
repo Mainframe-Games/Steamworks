@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Steamworks.Mainframe.Core
 {
@@ -11,7 +12,8 @@ namespace Steamworks.Mainframe.Core
 		public static uint SessionId => Steam.Valid ? Steamworks.SteamRemotePlay.GetSessionID(0).m_RemotePlaySessionID : 0;
 		public static List<SteamFriend> Friends { get; } = new List<SteamFriend>();
 
-		public static void Init()
+		[RuntimeInitializeOnLoadMethod]
+		private static void Init()
 		{
 			_remotePlaySessionConnected =
 				Callback<SteamRemotePlaySessionConnected_t>.Create(SteamRemotePlayOnSessionConnected);

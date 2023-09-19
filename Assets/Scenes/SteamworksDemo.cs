@@ -11,7 +11,6 @@ public class SteamworksDemo : MonoBehaviour
     {
         var str = new StringBuilder();
 
-        str.AppendLine("AppId: {}");
         str.AppendLine($"SteamId: {Steam.SteamId}");
         str.AppendLine($"Username: {Steam.Username}");
 

@@ -1,6 +1,6 @@
 ﻿namespace Steamworks.Mainframe.Core
 {
-	public class SteamOverlay
+	public static class SteamOverlay
 	{
 		public static bool IsEnabled()
 		{
