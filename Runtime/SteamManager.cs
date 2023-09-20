@@ -15,6 +15,10 @@ using System.Collections;
 using Steamworks;
 #endif
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 //
 // The SteamManager provides a base implementation of Steamworks.NET on which you can build upon.
 // It handles the basics of starting up and shutting down the SteamAPI for use.
@@ -61,6 +65,11 @@ public class SteamManager : MonoBehaviour {
 #endif
 
 	protected virtual void Awake() {
+#if UNITY_EDITOR
+		if (!EditorPrefs.GetBool("Steamworks.InitialiseInEditor"))
+			return;
+#endif
+		
 		// Only one instance of SteamManager at a time!
 		if (s_instance != null) {
 			Destroy(gameObject);
