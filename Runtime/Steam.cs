@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Steamworks.Mainframe
 {
@@ -14,7 +13,10 @@ namespace Steamworks.Mainframe
 		/// </summary>
 		public static bool Valid => SteamManager.Initialized;
 		
-		public static ulong AppId => 0;
+		/// <summary>
+		/// App Id of this game. Can set from your game logic
+		/// </summary>
+		public static ulong AppId { get; set; }
 		
 		/// <summary>
 		/// Id of the owner

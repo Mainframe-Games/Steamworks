@@ -26,26 +26,22 @@ using UnityEditor;
 [DisallowMultipleComponent]
 public class SteamManager : MonoBehaviour {
 #if !DISABLESTEAMWORKS
-	protected static bool s_EverInitialized = false;
+	protected static bool s_EverInitialized;
 
 	protected static SteamManager s_instance;
 	protected static SteamManager Instance {
-		get {
-			if (s_instance == null) {
-				return new GameObject("SteamManager").AddComponent<SteamManager>();
-			}
-			else {
+		get
+		{
+			if (s_instance)
 				return s_instance;
-			}
+			
+			Init();
+			return s_instance;
 		}
 	}
 
 	protected bool m_bInitialized = false;
-	public static bool Initialized {
-		get {
-			return Instance.m_bInitialized;
-		}
-	}
+	public static bool Initialized => Instance.m_bInitialized;
 
 	protected SteamAPIWarningMessageHook_t m_SteamAPIWarningMessageHook;
 
@@ -63,6 +59,12 @@ public class SteamManager : MonoBehaviour {
 		s_instance = null;
 	}
 #endif
+
+	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+	private static void Init()
+	{
+		s_instance = new GameObject("SteamManager").AddComponent<SteamManager>();
+	}
 
 	protected virtual void Awake() {
 #if UNITY_EDITOR
@@ -132,6 +134,7 @@ public class SteamManager : MonoBehaviour {
 		}
 
 		s_EverInitialized = true;
+		name += "_Initialized";
 	}
 
 	// This should only ever get called on first load and after an Assembly reload, You should never Disable the Steamworks Manager yourself.
