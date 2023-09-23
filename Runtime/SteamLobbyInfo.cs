@@ -9,10 +9,19 @@ namespace Steamworks.Mainframe
 	{
 		public ulong LobbyId { get; }
 		public bool IsHost => HostId == Steam.SteamId;
-		public ulong HostId => SteamMatchmaking.GetLobbyOwner((CSteamID)LobbyId).m_SteamID;
 		public int PlayerCount => SteamMatchmaking.GetNumLobbyMembers((CSteamID)LobbyId);
 		public int MaxPlayers => SteamMatchmaking.GetLobbyMemberLimit((CSteamID)LobbyId);
+		/// <summary>
+		/// Returns lobby owner id, Unlike <see cref="HostId"/> you need to be in the lobby to get this value.
+		/// </summary>
+		public ulong OwnerId => SteamMatchmaking.GetLobbyOwner((CSteamID)LobbyId).m_SteamID;
 		
+		public ulong HostId
+		{
+			get => ulong.Parse(GetData(nameof(HostId)));
+			set => SetData(nameof(HostId), value.ToString());
+		}
+
 		public string LobbyName
 		{
 			get => GetData(nameof(LobbyName));

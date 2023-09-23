@@ -62,6 +62,7 @@ namespace Steamworks.Mainframe
 			
 			Current = new SteamLobbyInfo(lobbyId)
 			{
+				HostId = Steam.SteamId,
 				LobbyName = lobbyName,
 				AppVersion = appVersion ?? Application.version,
 				IsAdvertising = true,
