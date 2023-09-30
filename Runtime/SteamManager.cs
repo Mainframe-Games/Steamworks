@@ -40,8 +40,8 @@ public class SteamManager : MonoBehaviour {
 		}
 	}
 
-	protected bool m_bInitialized = false;
-	public static bool Initialized => Instance.m_bInitialized;
+	protected bool _initialized;
+	public static bool Initialized => Instance && Instance._initialized;
 
 	protected SteamAPIWarningMessageHook_t m_SteamAPIWarningMessageHook;
 
@@ -63,7 +63,8 @@ public class SteamManager : MonoBehaviour {
 	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
 	private static void Init()
 	{
-		s_instance = new GameObject("SteamManager").AddComponent<SteamManager>();
+		if (Application.isPlaying)
+			s_instance = new GameObject("SteamManager").AddComponent<SteamManager>();
 	}
 
 	protected virtual void Awake() {
@@ -126,8 +127,8 @@ public class SteamManager : MonoBehaviour {
 		// [*] Your App ID is not completely set up, i.e. in Release State: Unavailable, or it's missing default packages.
 		// Valve's documentation for this is located here:
 		// https://partner.steamgames.com/doc/sdk/api#initialization_and_shutdown
-		m_bInitialized = SteamAPI.Init();
-		if (!m_bInitialized) {
+		_initialized = SteamAPI.Init();
+		if (!_initialized) {
 			Debug.LogError("[Steamworks.NET] SteamAPI_Init() failed. Refer to Valve's documentation or the comment above this line for more information.", this);
 
 			return;
@@ -143,7 +144,7 @@ public class SteamManager : MonoBehaviour {
 			s_instance = this;
 		}
 
-		if (!m_bInitialized) {
+		if (!_initialized) {
 			return;
 		}
 
@@ -165,7 +166,7 @@ public class SteamManager : MonoBehaviour {
 
 		s_instance = null;
 
-		if (!m_bInitialized) {
+		if (!_initialized) {
 			return;
 		}
 
@@ -173,7 +174,7 @@ public class SteamManager : MonoBehaviour {
 	}
 
 	protected virtual void Update() {
-		if (!m_bInitialized) {
+		if (!_initialized) {
 			return;
 		}
 
